@@ -2,7 +2,7 @@
 using namespace std;
 
 class Weapon { //Parent class + thinking of making it an abstract class
-private: //Ideas of states. Liklely to be changed to protected
+protected: //Ideas of states. Liklely to be changed to protected
     string rarity;
     string material;
     int damage;
@@ -14,9 +14,7 @@ public: //Ideas of Methods
             // Weapon created/Constructor
         }
 
-    void attack() {
-        // Attack or Damage + may leave this abstract for child classes
-    }
+    virtual int attack() = 0; // Pure virtual function making this an abstract class
 
     void repair() {
         // Repair weapon + may not do this
@@ -27,7 +25,6 @@ public: //Ideas of Methods
         cout << "Material: " << material << endl;
         cout << "Damage: " << damage << endl;
         cout << "Durability: " << durability << endl;
-        cout << endl;
     }
 
     virtual ~Weapon(){
@@ -45,11 +42,12 @@ private:
 public:
     Sword(string rarity, string material, int damage, int durability, int bladeLength, int sharpness, int bleedChance)
         : Weapon(rarity, material, damage, durability), bladeLength(bladeLength), sharpness(sharpness), bleedChance(bleedChance) {
-            // Sword created/Constructor
+            cout << material << " Sword created!" << endl; // May add names to the weapons later. Wee can the sayt "Excalibur created".
         }
 
-    void slash() {
-        // Slash attack
+    virtual int attack() {
+        cout << "Sword attack with damage: " << damage << endl;
+        return damage;
     }
 
     void parry() {
@@ -61,19 +59,16 @@ public:
         cout << "Blade Length: " << bladeLength << endl;
         cout << "Sharpness: " << sharpness << endl;
         cout << "Bleed Chance: " << bleedChance << "%" << endl;
-        cout << endl;
     }
 
     ~Sword(){
-        // Maybe message when sword is destroyed
+        cout << "Sword destroyed" << endl;
     }; // destructor
 };
 
 int main() {
-    Weapon myWeapon("Epic", "Steel", 50, 100);
-    myWeapon.displayInfo();
 
-    Sword *sword = new Sword("Legendary", "Mythril", 100, 200, 40, 90, 25); 
+    Sword *sword = new Sword("Legendary", "Iron", 100, 200, 40, 90, 25); 
     sword->displayInfo();
     
     delete sword; 
