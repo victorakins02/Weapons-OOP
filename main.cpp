@@ -1,18 +1,28 @@
 #include <iostream>
+#include <string>
 using namespace std;
+
+enum class Rarity {
+    Common,
+    Uncommon,
+    Rare,
+    Epic,
+    Legendary
+};
 
 class Weapon { //Parent class + thinking of making it an abstract class
 protected: //Ideas of states. Liklely to be changed to protected
-    string rarity;
+    Rarity rarity;
     string material;
     int damage;
     int durability;
 
 public: //Ideas of Methods
-    Weapon(string rarity, string material, int damage, int durability)
-        : rarity(rarity), material(material), damage(damage), durability(durability) {
-            // Weapon created/Constructor
-        }
+    Weapon(Rarity rarity, string material, int damage, int durability)
+    : rarity(rarity), material(material), damage(damage), durability(durability) {
+        // Maybe message when weapon is created
+    }
+
 
     virtual int attack() const = 0; // Pure virtual function making this an abstract class
 
@@ -20,11 +30,32 @@ public: //Ideas of Methods
         // Repair weapon + may not do this
     }
 
+    string getRarityName() const {
+        switch (rarity) {
+            case Rarity::Common:    return "Common";
+            case Rarity::Uncommon:  return "Uncommon";
+            case Rarity::Rare:      return "Rare";
+            case Rarity::Epic:      return "Epic";
+            case Rarity::Legendary: return "Legendary";
+            default:                return "Unknown";
+        }
+    }
+
     void displayInfo() const {
-        cout << "Rarity: " << rarity << endl;
+        cout << "Rarity: " << getRarityName() << endl;
         cout << "Material: " << material << endl;
         cout << "Damage: " << damage << endl;
         cout << "Durability: " << durability << endl;
+    }
+
+    int getDamage() const { 
+        cout << "Weapon damage: " << damage << endl;
+        return damage; 
+    }
+
+    int setDamage(int damage){
+        this->damage = damage;
+        return damage;
     }
 
     virtual ~Weapon(){
@@ -40,9 +71,9 @@ private:
     int sharpness;
     int bleedChance;
 public:
-    Sword(string rarity, string material, int damage, int durability, int bladeLength, int sharpness, int bleedChance)
+    Sword(Rarity rarity, string material, int damage, int durability, int bladeLength, int sharpness, int bleedChance)
         : Weapon(rarity, material, damage, durability), bladeLength(bladeLength), sharpness(sharpness), bleedChance(bleedChance) {
-            cout << material << " Sword created!" << endl; // May add names to the weapons later. Wee can the sayt "Excalibur created".
+            //cout << material << " Sword created!" << endl; // May add names to the weapons later. Wee can the sayt "Excalibur created".
         }
 
     virtual int attack() const {
@@ -58,7 +89,7 @@ public:
     }
 
     ~Sword(){
-        cout << material << " Sword destroyed" << endl;
+        //cout << material << " Sword destroyed" << endl;
     }; // destructor
 };
 
@@ -67,13 +98,19 @@ bool isStronger(const Weapon& w1, const Weapon& w2) {
     return w1.attack() > w2.attack();
 }
 
+void weaponbuffbyvalue(Sword weapon) {
+    // This function won't modify the original weapon
+    weapon.setDamage(weapon.getDamage() + 10); 
+}
+
+void weaponbuffbyreference(Sword& weapon) {
+    // This function can modify the original weapon
+    weapon.setDamage(weapon.getDamage() + 10); 
+}
+
 void destroyWeapon(Weapon* weapon) {
     delete weapon; // Polymorphic call to the appropriate destructor
 }
-
-// I am thinking implementing a pass by refernece function to upgrade the weapons. 
-// The rarity will determine the upgrade level and upgrade on stats. 
-
 
 // I am thinking of implemeenting Operator Overloading by doing a double attack function.
 // This will allow the player to do two attacks in one turn.
@@ -84,11 +121,16 @@ void destroyWeapon(Weapon* weapon) {
 
 int main() {
     // Creating instances of Sword
-    Sword *Iron = new Sword("Epic", "Iron", 100, 200, 40, 90, 25); 
-    Sword *Wood = new Sword("Common", "Wood", 20, 50, 30, 10, 5);
-    Sword *Diamond = new Sword("Legendary", "Diamond", 200, 500, 50, 100, 50);
+    Sword Tin =  Sword(Rarity::Common, "Tin", 15, 30, 25, 15, 10);
+    Sword *Iron = new Sword(Rarity::Epic, "Iron", 100, 200, 40, 90, 25); 
+    Sword *Wood = new Sword(Rarity::Uncommon, "Wood", 20, 50, 30, 10, 5);
+    Sword *Diamond = new Sword(Rarity::Legendary, "Diamond", 200, 500, 50, 100, 50);
 
     Iron->displayInfo();
+    //Iron->getDamage();
+    //weaponbuffbyvalue(*Iron); // This won't change the original Iron sword
+    //weaponbuffbyreference(*Iron); // This will change the original Iron sword
+    //Iron->getDamage();
     
     Weapon* Arsenal[3] = {Iron, Wood, Diamond}; // Array of weapon pointers
 
