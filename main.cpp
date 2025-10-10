@@ -11,17 +11,22 @@ enum class Rarity {
 };
 
 class Weapon { //Parent class + thinking of making it an abstract class
+private: 
+friend void getDurability(Weapon* weapon); // Friend function to access private members
+
 protected: //Ideas of states. Liklely to be changed to protected
     Rarity rarity;
     string material;
     int damage;
-    int durability;
+    int durability; // may need to make private and use friend function to access it
 
 public: //Ideas of Methods
     Weapon(Rarity rarity, string material, int damage, int durability)
     : rarity(rarity), material(material), damage(damage), durability(durability) {
         // Maybe message when weapon is created
     }
+
+    
 
 
     virtual int attack() const = 0; // Pure virtual function making this an abstract class
@@ -53,9 +58,16 @@ public: //Ideas of Methods
         return damage; 
     }
 
+    
+
     int setDamage(int damage){
         this->damage = damage;
         return damage;
+    }
+
+    int setDurability(int durability){
+        this->durability = durability;
+        return durability;
     }
 
     virtual ~Weapon(){
@@ -93,9 +105,9 @@ public:
     }; // destructor
 };
 
-bool isStronger(const Weapon& w1, const Weapon& w2) {
+bool operator == (const Weapon& w1, const Weapon& w2) {
     // Compare based on damage
-    return w1.attack() > w2.attack();
+    return w1.attack() == w2.attack();
 }
 
 void weaponbuffbyvalue(Sword weapon) {
@@ -106,6 +118,10 @@ void weaponbuffbyvalue(Sword weapon) {
 void weaponbuffbyreference(Sword& weapon) {
     // This function can modify the original weapon
     weapon.setDamage(weapon.getDamage() + 10); 
+}
+
+void getDurability(Weapon* weapon) { 
+    cout << "Weapon durability: " << weapon->durability << endl;
 }
 
 void destroyWeapon(Weapon* weapon) {
@@ -127,6 +143,7 @@ int main() {
     Sword *Diamond = new Sword(Rarity::Legendary, "Diamond", 200, 500, 50, 100, 50);
 
     Iron->displayInfo();
+    getDurability(Iron);
     //Iron->getDamage();
     //weaponbuffbyvalue(*Iron); // This won't change the original Iron sword
     //weaponbuffbyreference(*Iron); // This will change the original Iron sword
