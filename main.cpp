@@ -93,6 +93,10 @@ public:
         return damage;
     }
 
+    void slash() const {
+        std::cout << "Slashing the sword!" << std::endl;
+    }
+
     void displayInfo() const {
         Weapon::displayInfo(); // Call parent method to display common info
         cout << "Blade Length: " << bladeLength << endl;
@@ -124,6 +128,14 @@ void getDurability(Weapon* weapon) {
     cout << "Weapon durability: " << weapon->durability << endl;
 }
 
+void useWeapon(void* obj) {
+    // Turn the void* back into Sword* using static_cast
+    Sword* swordPtr = static_cast<Sword*>(obj);
+    // Now you can call Sword methods
+    swordPtr->slash();
+}
+
+
 void destroyWeapon(Weapon* weapon) {
     delete weapon; // Polymorphic call to the appropriate destructor
 }
@@ -142,6 +154,7 @@ int main() {
     Sword *Wood = new Sword(Rarity::Uncommon, "Wood", 20, 50, 30, 10, 5);
     Sword *Diamond = new Sword(Rarity::Legendary, "Diamond", 200, 500, 50, 100, 50);
 
+    useWeapon(static_cast<void*>(&Tin)); // Turned our Sword into a void pointer and back to Sword pointer
     Iron->displayInfo();
     getDurability(Iron);
     //Iron->getDamage();
