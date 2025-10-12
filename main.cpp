@@ -26,9 +26,6 @@ public: //Ideas of Methods
         // Maybe message when weapon is created
     }
 
-    
-
-
     virtual int attack() const = 0; // Pure virtual function making this an abstract class
 
     void repair() {
@@ -46,7 +43,7 @@ public: //Ideas of Methods
         }
     }
 
-    void displayInfo() const {
+    virtual void displayInfo() const {
         cout << "Rarity: " << getRarityName() << endl;
         cout << "Material: " << material << endl;
         cout << "Damage: " << damage << endl;
@@ -97,11 +94,22 @@ public:
         std::cout << "Slashing the sword!" << std::endl;
     }
 
-    void displayInfo() const {
+    void displayInfo() const override{
         Weapon::displayInfo(); // Call parent method to display common info
         cout << "Blade Length: " << bladeLength << endl;
         cout << "Sharpness: " << sharpness << endl;
         cout << "Bleed Chance: " << bleedChance << "%" << endl;
+    }
+
+    string getRarityName() const {
+        switch (rarity) {
+            case Rarity::Common:    return "Common Sword";
+            case Rarity::Uncommon:  return "Uncommon Sword";
+            case Rarity::Rare:      return "Rare Sword";
+            case Rarity::Epic:      return "Epic Sword";
+            case Rarity::Legendary: return "Legendary Sword";
+            default:                return "Unknown Sword";
+        }
     }
 
     ~Sword(){
@@ -129,7 +137,7 @@ void getDurability(Weapon* weapon) {
 }
 
 void useWeapon(void* obj) {
-    // Turn the void* back into Sword* using static_cast
+    // Cast the void* back to Sword* using static_cast
     Sword* swordPtr = static_cast<Sword*>(obj);
     // Now you can call Sword methods
     swordPtr->slash();
@@ -153,10 +161,15 @@ int main() {
     Sword *Iron = new Sword(Rarity::Epic, "Iron", 100, 200, 40, 90, 25); 
     Sword *Wood = new Sword(Rarity::Uncommon, "Wood", 20, 50, 30, 10, 5);
     Sword *Diamond = new Sword(Rarity::Legendary, "Diamond", 200, 500, 50, 100, 50);
+    
 
-    useWeapon(static_cast<void*>(&Tin)); // Turned our Sword into a void pointer and back to Sword pointer
-    Iron->displayInfo();
-    getDurability(Iron);
+    Weapon *weaponPtr = &Tin; 
+    weaponPtr->displayInfo(); // Virtual call to Sword's displayInfo
+    cout << weaponPtr->getRarityName() << endl; // Non-virtual call to Weapon's getRarityName
+
+
+    //Iron->displayInfo();
+    //getDurability(Iron);
     //Iron->getDamage();
     //weaponbuffbyvalue(*Iron); // This won't change the original Iron sword
     //weaponbuffbyreference(*Iron); // This will change the original Iron sword
