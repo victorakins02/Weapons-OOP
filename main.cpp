@@ -1,5 +1,7 @@
     #include <iostream>
     #include <string>
+    #include <vector>
+    #include <algorithm>
     using namespace std;
 
     class Weapon; // Using for self referencing. Keep getting out of scope errors without it
@@ -101,6 +103,10 @@
                 // Copy constructor
             }
 
+        virtual bool operator<(const Weapon& other) const {
+        return damage < other.damage;
+        }
+
         virtual ~Weapon(){
             // Maybe message when weapon is destroyed
         }; // destructor
@@ -167,6 +173,10 @@
             this->bleedChance = other.bleedChance;
         }
         return *this;
+        }
+
+        bool operator<(const Sword& other) const {
+        return damage < other.damage;
         }
 
         Sword getBladeLengthbyValue(Sword s) const { 
@@ -240,9 +250,9 @@
         //copyOfIke.displayInfo();
         //Explain copy constructor -> Pass by value creates a copy of the object
         //Explain pass by reference -> Pass by reference uses the original object without creating a copy
-        Sword roy = ike.getBladeLengthbyValue(ike); // Pass by value -> original is unchanged
+        //Sword roy = ike.getBladeLengthbyValue(ike); // Pass by value -> original is unchanged
         //ike.getBladeLengthbyReference(ike); // Pass by reference -> original can be changed
-        roy.displayInfo();
+        //roy.displayInfo();
 
         //Weapon *weaponPtr = &Tin; 
         //weaponPtr->displayInfo(); // Virtual call to Sword's displayInfo
@@ -256,11 +266,22 @@
         //weaponbuffbyvalue(*Iron); // This won't change the original Iron sword
         //weaponbuffbyreference(*Iron); // This will change the original Iron sword
         //Iron->getDamage();
-        
+
+        vector<void*> inventory; // Vector to hold void pointers
+        inventory.push_back(static_cast<void*>(Iron));
+        inventory.push_back(static_cast<void*>(Wood));
+        inventory.push_back(static_cast<void*>(Diamond));
+
+        sort(inventory.begin(), inventory.end());
+
+        for (void* item : inventory) {
+            useWeapon(item); // Use each weapon in the inventory
+        }
+
         Weapon* Arsenal[3] = {Iron, Wood, Diamond}; // Array of weapon pointers
 
         for (Weapon*& ptr : Arsenal) {
             destroyWeapon(ptr); // Polymorphic call
         }
-        return 0; 
+        return 0;
     }
