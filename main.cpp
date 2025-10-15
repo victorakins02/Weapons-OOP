@@ -119,16 +119,19 @@
         int bladeLength;
         int sharpness;
         int bleedChance;
+        static int swordCount; // Static member to count attacks
     public:
         Sword(Rarity rarity, string material, int damage, int durability, int speed, int bladeLength, int sharpness, int bleedChance)
             : Weapon(rarity, material, damage, durability, speed), bladeLength(bladeLength), sharpness(sharpness), bleedChance(bleedChance) {
                 //cout << material << " Sword created!" << endl; // May add names to the weapons later. Wee can the sayt "Excalibur created".
+                swordCount++;
             }
 
         Sword (const Sword& other) 
             : Weapon(other), 
               bladeLength(other.bladeLength), sharpness(other.sharpness), bleedChance(other.bleedChance) {
                 cout << "Sword copied!" << endl;
+                swordCount++;
             }
 
         virtual int attack() const {
@@ -139,6 +142,8 @@
         void slash() const {
             std::cout << "Slashing the sword!" << std::endl;
         }
+
+        
 
         void displayInfo() const override{
             Weapon::displayInfo(); // Call parent method to display common info
@@ -179,6 +184,10 @@
         return damage < other.damage;
         }
 
+        int getSwordCount() const {
+            return swordCount;
+        }
+
         Sword getBladeLengthbyValue(Sword s) const { 
             cout << "Copy Blade Length by value is 5 shorter: " << bladeLength - 5 << endl;
             return s;
@@ -189,8 +198,13 @@
             return s;
         };
 
+        static void printCount() { // Static member function
+        cout << "Number of Swords: " << swordCount << endl;
+        }
+
         ~Sword(){
             //cout << material << " Sword destroyed" << endl;
+            swordCount--;
         }; // destructor
     };
 
@@ -235,6 +249,7 @@
     // I am thinking of implementing Enumweapon types to determine the rarity of  the weapon.
     // May make it multiplier for the stats of the weapon.
 
+int Sword::swordCount = 0;
 
     int main() {
         // Creating instances of Sword
@@ -244,13 +259,13 @@
         Sword *Diamond = new Sword(Rarity::Legendary, "Diamond", 200, 500, 50, 100, 50, 60);
 
         Sword ike = Sword(Rarity::Rare, "Iron", 80, 150, 35, 85, 20, 40);
-        //Sword marth = Sword(Rarity::Rare, "Wood", 40, 20,70, 85, 5, 1);
+        Sword marth = Sword(Rarity::Rare, "Wood", 40, 20,70, 85, 5, 1);
 
-        //Sword copyOfIke = ike; // Calls copy constructor
+        Sword copyOfIke = ike; // Calls copy constructor
         //copyOfIke.displayInfo();
         //Explain copy constructor -> Pass by value creates a copy of the object
         //Explain pass by reference -> Pass by reference uses the original object without creating a copy
-        //Sword roy = ike.getBladeLengthbyValue(ike); // Pass by value -> original is unchanged
+        Sword roy = ike.getBladeLengthbyValue(ike); // Pass by value -> original is unchanged
         //ike.getBladeLengthbyReference(ike); // Pass by reference -> original can be changed
         //roy.displayInfo();
 
@@ -266,6 +281,8 @@
         //weaponbuffbyvalue(*Iron); // This won't change the original Iron sword
         //weaponbuffbyreference(*Iron); // This will change the original Iron sword
         //Iron->getDamage();
+
+        Iron->printCount(); // Static method call
 
         vector<void*> inventory; // Vector to hold void pointers
         inventory.push_back(static_cast<void*>(Iron));
