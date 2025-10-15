@@ -145,7 +145,6 @@ class Sword : public Weapon {
         }
 
         
-
         void displayInfo() const override{
             Weapon::displayInfo(); // Call parent method to display common info
             cout << "Blade Length: " << bladeLength << endl;
@@ -213,6 +212,7 @@ class Axe : public Weapon {
     private:
         int weight;
         int cleaveChance;
+        static int axeCount; // Static member to count attacks
     public:
         Axe(Rarity rarity, string material, int damage, int durability, int speed, int weight, int cleaveChance)
             : Weapon(rarity, material, damage, durability, speed), weight(weight), cleaveChance(cleaveChance) {
@@ -248,7 +248,7 @@ class Axe : public Weapon {
                 case Rarity::Epic:      return "Epic Axe";
                 case Rarity::Legendary: return "Legendary Axe";
                 default:                return "Unknown Axe";
-            } // May not need to repeat this function. Can inherit from Weapon then name it Axe where needed.
+            } // May not need to repeat this function. Can inherit from Weapon then name it Axe where needed. Make it abstract in Weapon.
         }
 
         Axe operator=(const Axe& other) {
@@ -266,10 +266,19 @@ class Axe : public Weapon {
             } 
             return *this;
         }
-        
+
+        int getAxeCount() const {
+            return axeCount;
+        }
+
         ~Axe(){
             //cout << material << " Axe destroyed" << endl;
         }; // destructor
+
+};
+
+class SwordAxe : public Sword, public Axe { // Example of multiple inheritance
+    
 
 };
 
