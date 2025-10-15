@@ -1,184 +1,242 @@
-#include <iostream>
-#include <string>
-using namespace std;
+    #include <iostream>
+    #include <string>
+    using namespace std;
 
-enum class Rarity {
-    Common,
-    Uncommon,
-    Rare,
-    Epic,
-    Legendary
-};
+    class Weapon; // Using for self referencing. Keep getting out of scope errors without it
 
-class Weapon { //Parent class + thinking of making it an abstract class
-private: 
-friend void getDurability(Weapon* weapon); // Friend function to access private members
+    enum class Rarity {
 
-protected: //Ideas of states. Liklely to be changed to protected
-    Rarity rarity;
-    string material;
-    int damage;
-    int durability; // may need to make private and use friend function to access it
+        Common,
+        Uncommon,
+        Rare,
+        Epic,
+        Legendary
+    };
 
-public: //Ideas of Methods
-    Weapon(Rarity rarity, string material, int damage, int durability)
-    : rarity(rarity), material(material), damage(damage), durability(durability) {
-        // Maybe message when weapon is created
-    }
+    void faster(Weapon* weapon);
 
-    virtual int attack() const = 0; // Pure virtual function making this an abstract class
+    class Weapon { //Parent class + thinking of making it an abstract class
+    private: 
+    friend void getDurability(Weapon* weapon); // Friend function to access private members
 
-    void repair() {
-        // Repair weapon + may not do this
-    }
+    protected: //Ideas of states. Liklely to be changed to protected
+        Rarity rarity;
+        string material;
+        int damage;
+        int speed; 
+        int durability; // may need to make private and use friend function to access it
 
-    string getRarityName() const {
-        switch (rarity) {
-            case Rarity::Common:    return "Common";
-            case Rarity::Uncommon:  return "Uncommon";
-            case Rarity::Rare:      return "Rare";
-            case Rarity::Epic:      return "Epic";
-            case Rarity::Legendary: return "Legendary";
-            default:                return "Unknown";
-        }
-    }
-
-    virtual void displayInfo() const {
-        cout << "Rarity: " << getRarityName() << endl;
-        cout << "Material: " << material << endl;
-        cout << "Damage: " << damage << endl;
-        cout << "Durability: " << durability << endl;
-    }
-
-    int getDamage() const { 
-        cout << "Weapon damage: " << damage << endl;
-        return damage; 
-    }
-
-    
-
-    int setDamage(int damage){
-        this->damage = damage;
-        return damage;
-    }
-
-    int setDurability(int durability){
-        this->durability = durability;
-        return durability;
-    }
-
-    virtual ~Weapon(){
-        // Maybe message when weapon is destroyed
-    }; // destructor
-
-
-};
-
-class Sword : public Weapon {
-private:
-    int bladeLength;
-    int sharpness;
-    int bleedChance;
-public:
-    Sword(Rarity rarity, string material, int damage, int durability, int bladeLength, int sharpness, int bleedChance)
-        : Weapon(rarity, material, damage, durability), bladeLength(bladeLength), sharpness(sharpness), bleedChance(bleedChance) {
-            //cout << material << " Sword created!" << endl; // May add names to the weapons later. Wee can the sayt "Excalibur created".
+    public: //Ideas of Methods
+        Weapon(Rarity rarity, string material, int damage, int durability, int speed)
+        : rarity(rarity), material(material), damage(damage), durability(durability), speed(speed) {
+            // Maybe message when weapon is created
         }
 
-    virtual int attack() const {
-        cout << "Sword attack with damage: " << damage << endl;
-        return damage;
-    }
+        virtual int attack() const = 0; // Pure virtual function making this an abstract class
 
-    void slash() const {
-        std::cout << "Slashing the sword!" << std::endl;
-    }
-
-    void displayInfo() const override{
-        Weapon::displayInfo(); // Call parent method to display common info
-        cout << "Blade Length: " << bladeLength << endl;
-        cout << "Sharpness: " << sharpness << endl;
-        cout << "Bleed Chance: " << bleedChance << "%" << endl;
-    }
-
-    string getRarityName() const {
-        switch (rarity) {
-            case Rarity::Common:    return "Common Sword";
-            case Rarity::Uncommon:  return "Uncommon Sword";
-            case Rarity::Rare:      return "Rare Sword";
-            case Rarity::Epic:      return "Epic Sword";
-            case Rarity::Legendary: return "Legendary Sword";
-            default:                return "Unknown Sword";
+        void repair() {
+            // Repair weapon + may not do this
         }
+
+        string getRarityName() const {
+            switch (rarity) {
+                case Rarity::Common:    return "Common";
+                case Rarity::Uncommon:  return "Uncommon";
+                case Rarity::Rare:      return "Rare";
+                case Rarity::Epic:      return "Epic";
+                case Rarity::Legendary: return "Legendary";
+                default:                return "Unknown";
+            }
+        }
+
+        virtual void displayInfo() const {
+            cout << "Rarity: " << getRarityName() << endl;
+            cout << "Material: " << material << endl;
+            cout << "Damage: " << damage << endl;
+            cout << "Durability: " << durability << endl;
+        }
+
+        int getDamage() const { 
+            cout << "Weapon damage: " << damage << endl;
+            return damage; 
+        }
+        
+        int setDamage(int damage){
+            this->damage = damage;
+            return damage;
+        }
+
+
+        int setDurability(int durability){
+            this->durability = durability;
+            return durability;
+        }
+
+        int getSpeed() const { 
+            cout << "Weapon speed: " << speed << endl;
+            return speed; 
+        }
+
+        void setSpeedValue(int value) { 
+            speed = value;
+        }
+
+        void buffSpeed() {
+            faster(this);
+        }
+
+        virtual Weapon& operator=(const Weapon& other) {
+        if (this != &other) {
+            this->rarity     = other.rarity;
+            this->material   = other.material;   // std::string deep-copies itself
+            this->damage     = other.damage;
+            this->durability = other.durability;
+            this->speed      = other.speed;
+        }
+        return *this;
     }
 
-    ~Sword(){
-        //cout << material << " Sword destroyed" << endl;
-    }; // destructor
-};
-
-bool operator == (const Weapon& w1, const Weapon& w2) {
-    // Compare based on damage
-    return w1.attack() == w2.attack();
-}
-
-void weaponbuffbyvalue(Sword weapon) {
-    // This function won't modify the original weapon
-    weapon.setDamage(weapon.getDamage() + 10); 
-}
-
-void weaponbuffbyreference(Sword& weapon) {
-    // This function can modify the original weapon
-    weapon.setDamage(weapon.getDamage() + 10); 
-}
-
-void getDurability(Weapon* weapon) { 
-    cout << "Weapon durability: " << weapon->durability << endl;
-}
-
-void useWeapon(void* obj) {
-    // Cast the void* back to Sword* using static_cast
-    Sword* swordPtr = static_cast<Sword*>(obj);
-    // Now you can call Sword methods
-    swordPtr->slash();
-}
+        virtual ~Weapon(){
+            // Maybe message when weapon is destroyed
+        }; // destructor
 
 
-void destroyWeapon(Weapon* weapon) {
-    delete weapon; // Polymorphic call to the appropriate destructor
-}
+    };
 
-// I am thinking of implemeenting Operator Overloading by doing a double attack function.
-// This will allow the player to do two attacks in one turn.
+    class Sword : public Weapon {
+    private:
+        int bladeLength;
+        int sharpness;
+        int bleedChance;
+    public:
+        Sword(Rarity rarity, string material, int damage, int durability, int speed, int bladeLength, int sharpness, int bleedChance)
+            : Weapon(rarity, material, damage, durability, speed), bladeLength(bladeLength), sharpness(sharpness), bleedChance(bleedChance) {
+                //cout << material << " Sword created!" << endl; // May add names to the weapons later. Wee can the sayt "Excalibur created".
+            }
 
-// I am thinking of implementing Enumweapon types to determine the rarity of  the weapon.
-// May make it multiplier for the stats of the weapon.
+        virtual int attack() const {
+            cout << "Sword attack with damage: " << damage << endl;
+            return damage;
+        }
 
+        void slash() const {
+            std::cout << "Slashing the sword!" << std::endl;
+        }
 
-int main() {
-    // Creating instances of Sword
-    Sword Tin =  Sword(Rarity::Common, "Tin", 15, 30, 25, 15, 10);
-    Sword *Iron = new Sword(Rarity::Epic, "Iron", 100, 200, 40, 90, 25); 
-    Sword *Wood = new Sword(Rarity::Uncommon, "Wood", 20, 50, 30, 10, 5);
-    Sword *Diamond = new Sword(Rarity::Legendary, "Diamond", 200, 500, 50, 100, 50);
-    
+        void displayInfo() const override{
+            Weapon::displayInfo(); // Call parent method to display common info
+            cout << "Blade Length: " << bladeLength << endl;
+            cout << "Sharpness: " << sharpness << endl;
+            cout << "Bleed Chance: " << bleedChance << "%" << endl;
+        }
 
-    Weapon *weaponPtr = &Tin; 
-    weaponPtr->displayInfo(); // Virtual call to Sword's displayInfo
-    cout << weaponPtr->getRarityName() << endl; // Non-virtual call to Weapon's getRarityName
+        string getRarityName() const {
+            switch (rarity) {
+                case Rarity::Common:    return "Common Sword";
+                case Rarity::Uncommon:  return "Uncommon Sword";
+                case Rarity::Rare:      return "Rare Sword";
+                case Rarity::Epic:      return "Epic Sword";
+                case Rarity::Legendary: return "Legendary Sword";
+                default:                return "Unknown Sword";
+            }
+        }
 
+        Sword& operator=(const Sword& other) {
+        if (this != &other) {
+            // Copy base part (Weapon)
+            this->rarity     = other.rarity;
+            this->material   = other.material;   // std::string deep-copies itself
+            this->damage     = other.damage;
+            this->durability = other.durability;
+            this->speed      = other.speed;
 
-    //Iron->displayInfo();
-    //getDurability(Iron);
-    //Iron->getDamage();
-    //weaponbuffbyvalue(*Iron); // This won't change the original Iron sword
-    //weaponbuffbyreference(*Iron); // This will change the original Iron sword
-    //Iron->getDamage();
-    
-    Weapon* Arsenal[3] = {Iron, Wood, Diamond}; // Array of weapon pointers
+            // Copy derived part (Sword)
+            this->bladeLength = other.bladeLength;
+            this->sharpness   = other.sharpness;
+            this->bleedChance = other.bleedChance;
+        }
+        return *this;
+        }
 
-    for (Weapon*& ptr : Arsenal) {
-        destroyWeapon(ptr); // Polymorphic call
+        ~Sword(){
+            //cout << material << " Sword destroyed" << endl;
+        }; // destructor
+    };
+
+    bool operator == (const Weapon& w1, const Weapon& w2) {
+        // Compare based on damage
+        return w1.attack() == w2.attack();
     }
-    return 0;
-}
+
+    void weaponbuffbyvalue(Sword weapon) {
+        // This function won't modify the original weapon
+        weapon.setDamage(weapon.getDamage() + 10); 
+    }
+
+    void weaponbuffbyreference(Sword& weapon) {
+        // This function can modify the original weapon
+        weapon.setDamage(weapon.getDamage() + 10); 
+    }
+
+    void getDurability(Weapon* weapon) { 
+        cout << "Weapon durability: " << weapon->durability << endl;
+    }
+
+    void faster(Weapon* weapon) {
+        weapon->setSpeedValue(weapon->getSpeed() + 10);
+        cout << "Weapon speed increased to: " << weapon->getSpeed() << endl;
+    }
+
+    void useWeapon(void* obj) {
+        // Cast the void* back to Sword* using static_cast
+        Sword* swordPtr = static_cast<Sword*>(obj);
+        // Now you can call Sword methods
+        swordPtr->slash();
+    }
+
+    void destroyWeapon(Weapon* weapon) {
+        delete weapon; // Polymorphic call to the appropriate destructor
+    }
+
+    // I am thinking of implemeenting Operator Overloading by doing a double attack function.
+    // This will allow the player to do two attacks in one turn.
+
+    // I am thinking of implementing Enumweapon types to determine the rarity of  the weapon.
+    // May make it multiplier for the stats of the weapon.
+
+
+    int main() {
+        // Creating instances of Sword
+        Sword Tin =  Sword(Rarity::Common, "Tin", 15, 30, 25, 15, 10, 5);
+        Sword *Iron = new Sword(Rarity::Epic, "Iron", 100, 200, 40, 90, 25, 50); 
+        Sword *Wood = new Sword(Rarity::Uncommon, "Wood", 20, 50, 30, 10, 5, 5);
+        Sword *Diamond = new Sword(Rarity::Legendary, "Diamond", 200, 500, 50, 100, 50, 60);
+
+        Sword ike = Sword(Rarity::Rare, "Iron", 80, 150, 35, 85, 20, 40);
+        Sword marth = Sword(Rarity::Rare, "Wood", 40, 20,70, 85, 5, 1);
+
+        marth = ike;
+
+        marth.displayInfo();
+
+
+        //Weapon *weaponPtr = &Tin; 
+        //weaponPtr->displayInfo(); // Virtual call to Sword's displayInfo
+        //cout << weaponPtr->getRarityName() << endl; // Non-virtual call to Weapon's getRarityName
+
+        //Iron->buffSpeed(); // Increase speed by 10
+
+        //Iron->displayInfo();
+        //getDurability(Iron);
+        //Iron->getDamage();
+        //weaponbuffbyvalue(*Iron); // This won't change the original Iron sword
+        //weaponbuffbyreference(*Iron); // This will change the original Iron sword
+        //Iron->getDamage();
+        
+        Weapon* Arsenal[3] = {Iron, Wood, Diamond}; // Array of weapon pointers
+
+        for (Weapon*& ptr : Arsenal) {
+            destroyWeapon(ptr); // Polymorphic call
+        }
+        return 0;
+    }
