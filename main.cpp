@@ -2,6 +2,7 @@
     #include <string>
     #include <vector>
     #include <algorithm>
+    #include <memory>
     using namespace std;
 
     class Weapon; // Using for self referencing. Keep getting out of scope errors without it
@@ -283,6 +284,23 @@ int Sword::swordCount = 0;
         //Iron->getDamage();
 
         Iron->printCount(); // Static method call
+
+        shared_ptr<Sword> chrom = make_shared<Sword>(Rarity::Legendary, "Chrom's Sword", 250, 600, 60, 110, 60, 70);
+        cout << "chrom use_count: " << chrom.use_count() << endl; // 1
+        //So chrom is a smart Sword pointer to a sword namedchroms sword. 
+        //Then we make another smart Sword pointer named lucina which is also pointing to chroms sword.  
+        //Now there is two smart pointers pointing to chroms sword. 
+        //When chrom and lucina go out of scope they automatically get deleted.
+
+        shared_ptr<Sword> lucina = chrom; // Shared ownership
+        cout << "chrom use_count after lucina copy: " << chrom.use_count() << endl; // 2
+        cout << "lucina use_count: " << lucina.use_count() << endl;
+
+        {
+            shared_ptr<Sword> robin = chrom;
+            cout << "sp1 use_count: " << chrom.use_count() << endl; // 3
+            cout << "sp3 use_count: " << robin.use_count() << endl; // 3
+        } // robin goes out of scope here so back to 2
 
         vector<void*> inventory; // Vector to hold void pointers
         inventory.push_back(static_cast<void*>(Iron));
