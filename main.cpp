@@ -262,5 +262,5 @@
         for (Weapon*& ptr : Arsenal) {
             destroyWeapon(ptr); // Polymorphic call
         }
-        return 0;
+        return 0; 
     }
