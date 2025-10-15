@@ -94,7 +94,12 @@
             this->speed      = other.speed;
         }
         return *this;
-    }
+        }
+
+        Weapon(const Weapon& other) 
+            : rarity(other.rarity), material(other.material), damage(other.damage), durability(other.durability), speed(other.speed) {
+                // Copy constructor
+            }
 
         virtual ~Weapon(){
             // Maybe message when weapon is destroyed
@@ -112,6 +117,12 @@
         Sword(Rarity rarity, string material, int damage, int durability, int speed, int bladeLength, int sharpness, int bleedChance)
             : Weapon(rarity, material, damage, durability, speed), bladeLength(bladeLength), sharpness(sharpness), bleedChance(bleedChance) {
                 //cout << material << " Sword created!" << endl; // May add names to the weapons later. Wee can the sayt "Excalibur created".
+            }
+
+        Sword (const Sword& other) 
+            : Weapon(other), 
+              bladeLength(other.bladeLength), sharpness(other.sharpness), bleedChance(other.bleedChance) {
+                cout << "Sword copied!" << endl;
             }
 
         virtual int attack() const {
@@ -157,6 +168,16 @@
         }
         return *this;
         }
+
+        Sword getBladeLengthbyValue(Sword s) const { 
+            cout << "Copy Blade Length by value is 5 shorter: " << bladeLength - 5 << endl;
+            return s;
+        };
+
+        Sword getBladeLengthbyReference(const Sword& s) const { 
+            cout << "Copy Blade Length by reference is the same: " << bladeLength << endl;
+            return s;
+        };
 
         ~Sword(){
             //cout << material << " Sword destroyed" << endl;
@@ -213,12 +234,15 @@
         Sword *Diamond = new Sword(Rarity::Legendary, "Diamond", 200, 500, 50, 100, 50, 60);
 
         Sword ike = Sword(Rarity::Rare, "Iron", 80, 150, 35, 85, 20, 40);
-        Sword marth = Sword(Rarity::Rare, "Wood", 40, 20,70, 85, 5, 1);
+        //Sword marth = Sword(Rarity::Rare, "Wood", 40, 20,70, 85, 5, 1);
 
-        marth = ike;
-
-        marth.displayInfo();
-
+        //Sword copyOfIke = ike; // Calls copy constructor
+        //copyOfIke.displayInfo();
+        //Explain copy constructor -> Pass by value creates a copy of the object
+        //Explain pass by reference -> Pass by reference uses the original object without creating a copy
+        Sword roy = ike.getBladeLengthbyValue(ike); // Pass by value -> original is unchanged
+        //ike.getBladeLengthbyReference(ike); // Pass by reference -> original can be changed
+        roy.displayInfo();
 
         //Weapon *weaponPtr = &Tin; 
         //weaponPtr->displayInfo(); // Virtual call to Sword's displayInfo
