@@ -1,0 +1,128 @@
+#pragma once
+#include <string>
+
+enum class Rarity {
+    Common,
+    Uncommon,
+    Rare,
+    Epic,
+    Legendary
+};
+
+// Base Class: Weapon
+class Weapon {
+private:
+    friend void getDurability(Weapon* weapon); // Friend function to access private members
+
+protected:
+    Rarity rarity;
+    std::string material;
+    int damage;
+    int speed;
+    int durability;
+
+public:
+    // Constructors
+    Weapon(Rarity rarity, const std::string& material, int damage, int durability, int speed);
+    Weapon(const Weapon& other);
+
+    // Virtual Destructor
+    virtual ~Weapon();
+
+    // makes Weapon abstract
+    virtual int attack() const = 0;
+
+    // Methods
+    virtual void displayInfo() const;
+    std::string getRarityName() const;
+
+    int getDamage() const;
+    void setDamage(int damage);
+
+    int getDurability() const;
+    void setDurability(int durability);
+
+    int getSpeed() const;
+    void setSpeedValue(int value);
+    void buffSpeed();
+
+    // Operators
+    virtual Weapon& operator=(const Weapon& other);
+    virtual bool operator<(const Weapon& other) const;
+};
+
+// Derived Class: Sword
+class Sword : public virtual Weapon {
+private:
+    int bladeLength;
+    int sharpness;
+    int bleedChance;
+    static int swordCount; // Static member to count attacks
+
+public:
+    // Constructors
+    Sword(Rarity rarity, const std::string& material, int damage, int durability, int speed,
+          int bladeLength, int sharpness, int bleedChance);
+    Sword(const Sword& other);
+
+    // Destructor
+    ~Sword();
+
+    // Methods
+    int attack() const override;
+    void slash() const;
+    void displayInfo() const override;
+    std::string getRarityName() const;
+
+    // Operators
+    Sword& operator=(const Sword& other);
+    bool operator<(const Sword& other) const;
+
+    // Static
+    static int getSwordCount();
+    static void printCount();
+
+    // Example methods using value/reference
+    Sword getBladeLengthByValue(Sword s) const;
+    Sword getBladeLengthByReference(const Sword& s) const;
+};
+
+// Derived Class: Axe
+class Axe : public virtual Weapon {
+private:
+    int weight;
+    int cleaveChance;
+    static int axeCount; // Static member to count attacks  
+
+public:
+    // Constructors
+    Axe(Rarity rarity, const std::string& material, int damage, int durability, int speed,
+        int weight, int cleaveChance);
+    Axe(const Axe& other);
+
+    // Destructor
+    ~Axe();
+
+    // Methods
+    int attack() const override;
+    void chop() const;
+    void displayInfo() const override;
+    std::string getRarityName() const;
+
+    // Operators
+    Axe& operator=(const Axe& other);
+    bool operator<(const Axe& other) const;
+
+    // Static tracking
+    static int getAxeCount();
+};
+
+
+// Non-member Function
+void faster(Weapon* weapon);
+void getDurability(Weapon* weapon);
+void useWeapon(void* obj);
+void destroyWeapon(Weapon* weapon);
+bool operator==(const Weapon& w1, const Weapon& w2);
+void weaponBuffByValue(Sword weapon);
+void weaponBuffByReference(Sword& weapon);
