@@ -233,6 +233,12 @@ bool operator==(const Weapon& w1, const Weapon& w2) {
     return w1.getDamage() == w2.getDamage();
 }
 
+void displayArsenal(Weapon* const arsenal[], int size) {
+    for (int i = 0; i < size; ++i) {
+        arsenal[i]->displayInfo();
+    }
+}
+
 void weaponBuffByValue(Sword weapon) {
     weapon.setDamage(weapon.getDamage() + 10);
 }

@@ -9,7 +9,7 @@ enum class Rarity {
     Legendary
 };
 
-// Base Class: Weapon
+// Base Class: Weapon (3. Abstract Class)
 class Weapon {
 private:
     friend void getDurability(Weapon* weapon); // Friend function to access private members
@@ -29,7 +29,7 @@ public:
     // Virtual Destructor
     virtual ~Weapon();
 
-    // makes Weapon abstract
+    // Abstract Method
     virtual int attack() const = 0;
 
     // Methods
@@ -51,14 +51,14 @@ public:
     virtual bool operator<(const Weapon& other) const;
 };
 
-// Derived Class: Sword
+// Derived Class: Sword (1. Inheritance, 2. Access Specifiers)
 class Sword : public virtual Weapon {
 private:
     int bladeLength;
+    static int swordCount; // Static member to count attack
+protected:
     int sharpness;
     int bleedChance;
-    static int swordCount; // Static member to count attacks
-
 public:
     // Constructors
     Sword(Rarity rarity, const std::string& material, int damage, int durability, int speed,
@@ -90,10 +90,10 @@ public:
 // Derived Class: Axe
 class Axe : public virtual Weapon {
 private:
+    static int axeCount; // Static member to count attacks  
+protected:
     int weight;
     int cleaveChance;
-    static int axeCount; // Static member to count attacks  
-
 public:
     // Constructors
     Axe(Rarity rarity, const std::string& material, int damage, int durability, int speed,
@@ -121,6 +121,7 @@ public:
 // Non-member Function
 void faster(Weapon* weapon);
 void getDurability(Weapon* weapon);
+void displayArsenal(Weapon* const arsenal[], int size);
 void useWeapon(void* obj);
 void destroyWeapon(Weapon* weapon);
 bool operator==(const Weapon& w1, const Weapon& w2);
