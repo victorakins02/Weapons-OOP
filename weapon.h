@@ -34,7 +34,7 @@ public:
 
     // Methods
     virtual void displayInfo() const;
-    std::string getRarityName() const;
+    virtual std::string getRarityName() const;
 
     int getDamage() const;
     void setDamage(int damage);
@@ -73,6 +73,9 @@ public:
     void slash() const;
     void displayInfo() const override;
     std::string getRarityName() const;
+    void increaseSpeed(Sword& sword); // Example method to increase speed
+    int getSpeed() const;
+    
 
     // Operators
     Sword& operator=(const Sword& other);
@@ -121,6 +124,7 @@ public:
 // Non-member Function
 void faster(Weapon* weapon);
 void getDurability(Weapon* weapon);
+void displayRarity(const Weapon& weapon);
 void displayArsenal(Weapon* const arsenal[], int size);
 void useWeapon(void* obj);
 void destroyWeapon(Weapon* weapon);

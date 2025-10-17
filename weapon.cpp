@@ -44,6 +44,7 @@ void Weapon::setDurability(int durability) {
 }
 
 int Weapon::getSpeed() const { 
+    cout << "Getting Weapon: " << speed << endl;
     return speed; 
 }
 
@@ -96,7 +97,9 @@ Sword::Sword(const Sword& other)
       bladeLength(other.bladeLength),
       sharpness(other.sharpness),
       bleedChance(other.bleedChance) {
+
     swordCount++;
+    cout << "Sword copied!" << endl;
 }
 
 int Sword::attack() const {
@@ -113,6 +116,10 @@ void Sword::displayInfo() const {
     cout << "Blade Length: " << bladeLength << endl;
     cout << "Sharpness: " << sharpness << endl;
     cout << "Bleed Chance: " << bleedChance << "%" << endl;
+}
+
+void Sword::increaseSpeed(Sword& sword) {
+    faster(&sword);
 }
 
 string Sword::getRarityName() const {
@@ -157,6 +164,11 @@ Sword Sword::getBladeLengthByReference(const Sword& s) const {
 void Sword::printCount() {
     cout << "Number of Swords: " << swordCount << endl;
 }
+
+int Sword::getSpeed() const { 
+    cout << "Getting Sword: " << speed << endl;
+    return speed; 
+};
 
 Sword::~Sword() {
     cout << "Sword destroyed!" << endl;
@@ -236,11 +248,16 @@ bool operator==(const Weapon& w1, const Weapon& w2) {
 void displayArsenal(Weapon* const arsenal[], int size) {
     for (int i = 0; i < size; ++i) {
         arsenal[i]->displayInfo();
+        cout << endl;
     }
 }
 
 void weaponBuffByValue(Sword weapon) {
     weapon.setDamage(weapon.getDamage() + 10);
+}
+
+void displayRarity(const Weapon& weapon) {
+    cout << "Weapon Rarity: " << weapon.getRarityName() << endl;
 }
 
 void weaponBuffByReference(Sword& weapon) {
