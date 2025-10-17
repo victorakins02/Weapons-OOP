@@ -13,6 +13,9 @@ int main() {
     Sword *Diamond = new Sword(Rarity::Legendary, "Diamond", 200, 500, 50, 100, 50, 60);
     Axe Bronze = Axe(Rarity::Common, "Bronze", 30, 60, 20, 40, 10);
     Sword *Wood = new Sword(Rarity::Uncommon, "Wood", 20, 50, 30, 10, 5, 5);
+    SwordAxe Silver = SwordAxe(Rarity::Rare, "Silver", 150, 300, 45, 95, 30, 40, 60, 20);
+
+    Silver.displayInfo();
 
     //Sword ike = Sword(Rarity::Rare, "Iron", 80, 150, 35, 85, 20, 40);
     //Sword marth = Sword(Rarity::Rare, "Wood", 40, 20,70, 85, 5, 1);

@@ -9,6 +9,7 @@ enum class Rarity {
     Legendary
 };
 
+
 // Base Class: Weapon (3. Abstract Class)
 class Weapon {
 private:
@@ -120,6 +121,29 @@ public:
     static int getAxeCount();
 };
 
+class SwordAxe : public Sword, public Axe {
+public:
+    // Constructor
+    SwordAxe(Rarity rarity, const std::string& material, int damage, int durability, int speed,
+             int bladeLength, int sharpness, int bleedChance,
+             int weight, int cleaveChance);
+
+    // Override attack to combine Sword and Axe damage
+    int attack() const override;
+
+    // Override displayInfo to show both Sword and Axe info
+    void displayInfo() const override;
+
+    // Resolve ambiguity of Weapon::getRarityName
+    std::string getRarityName() const override {
+        // Option 1: combine both parent names
+        return Sword::getRarityName() + " & " + Axe::getRarityName();
+
+        // Option 2: pick one parent (uncomment if preferred)
+        // return Sword::getRarityName();
+        // return Axe::getRarityName();
+    }
+};
 
 // Non-member Function
 void faster(Weapon* weapon);

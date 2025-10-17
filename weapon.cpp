@@ -240,6 +240,38 @@ Axe::~Axe() {
     axeCount--;
 }
 
+// Derived Class: SwordAxe. Combines Sword and Axe (Multiple Inheritance)
+SwordAxe::SwordAxe(Rarity rarity, const std::string& material, int damage, int durability, int speed,
+                   int bladeLength, int sharpness, int bleedChance,
+                   int weight, int cleaveChance)
+    : Weapon(rarity, material, damage, durability, speed), // initialize virtual base
+      Sword(rarity, material, damage, durability, speed, bladeLength, sharpness, bleedChance),
+      Axe(rarity, material, damage, durability, speed, weight, cleaveChance) 
+{
+    cout << "SwordAxe created!" << endl;
+}
+
+// Override attack to combine Sword and Axe attacks
+int SwordAxe::attack() const {
+    int swordDamage = Sword::attack(); // call Sword's attack
+    int axeDamage   = Axe::attack();   // call Axe's attack
+    int totalDamage = swordDamage + axeDamage;
+    cout << "SwordAxe total damage: " << totalDamage << endl;
+    return totalDamage;
+}
+
+// Override displayInfo to show info from both Sword and Axe
+void SwordAxe::displayInfo() const {
+    int swordDamage = Sword::attack(); // call Sword's attack
+    int axeDamage   = Axe::attack();   // call Axe's attack
+    int totalDamage = swordDamage + axeDamage;
+    cout << "Rarity: " << getRarityName() << endl;
+    cout << "Material: " << material << endl;
+    cout << "Total Damage: " << totalDamage << endl; // combined damage
+    cout << "Bleed Chance: " << Sword::bleedChance << "%" << endl;
+    cout << "Cleave Chance: " << Axe::cleaveChance << "%" << endl;
+}
+
 // Non-member Functions
 bool operator==(const Weapon& w1, const Weapon& w2) {
     return w1.getDamage() == w2.getDamage();
