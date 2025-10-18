@@ -16,15 +16,17 @@ private:
     friend void getDurability(Weapon* weapon); // Friend function to access private members
 
 protected:
+    std::string name; 
     Rarity rarity;
     std::string material;
     int damage;
     int speed;
     int durability;
 
+
 public:
     // Constructors
-    Weapon(Rarity rarity, const std::string& material, int damage, int durability, int speed);
+    Weapon(const std::string& name, Rarity rarity, const std::string& material, int damage, int durability, int speed);
     Weapon(const Weapon& other);
 
     // Virtual Destructor
@@ -35,7 +37,9 @@ public:
 
     // Methods
     virtual void displayInfo() const;
+    std::string getName() const; 
     virtual std::string getRarityName() const;
+    std::string getMaterial() const;
 
     int getDamage() const;
     void setDamage(int damage);
@@ -62,7 +66,7 @@ protected:
     int bleedChance;
 public:
     // Constructors
-    Sword(Rarity rarity, const std::string& material, int damage, int durability, int speed,
+    Sword(const std::string& name, Rarity rarity, const std::string& material, int damage, int durability, int speed,
           int bladeLength, int sharpness, int bleedChance);
     Sword(const Sword& other);
 
@@ -100,7 +104,7 @@ protected:
     int cleaveChance;
 public:
     // Constructors
-    Axe(Rarity rarity, const std::string& material, int damage, int durability, int speed,
+    Axe(const std::string& name, Rarity rarity, const std::string& material, int damage, int durability, int speed,
         int weight, int cleaveChance);
     Axe(const Axe& other);
 
@@ -124,7 +128,7 @@ public:
 class SwordAxe : public Sword, public Axe {
 public:
     // Constructor
-    SwordAxe(Rarity rarity, const std::string& material, int damage, int durability, int speed,
+    SwordAxe(const std::string& name, Rarity rarity, const std::string& material, int damage, int durability, int speed,
              int bladeLength, int sharpness, int bleedChance,
              int weight, int cleaveChance);
 
@@ -143,7 +147,10 @@ public:
         // return Sword::getRarityName();
         // return Axe::getRarityName();
     }
+    ~SwordAxe();
 };
+
+
 
 // Non-member Function
 void faster(Weapon* weapon);

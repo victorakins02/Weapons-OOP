@@ -3,9 +3,9 @@
 using namespace std;
 
 // Base Class: Weapon
-Weapon::Weapon(Rarity rarity, const std::string& material, int damage, int durability, int speed)
-    : rarity(rarity), material(material), damage(damage), durability(durability), speed(speed) {
-    cout << "Weapon created!" << endl;;
+Weapon::Weapon(const std::string& name, Rarity rarity, const std::string& material, int damage, int durability, int speed)
+    : name(name), rarity(rarity), material(material), damage(damage), durability(durability), speed(speed) {
+    //cout << "Weapon " << name << " created!" << endl;;
 }
 
 string Weapon::getRarityName() const {
@@ -20,11 +20,17 @@ string Weapon::getRarityName() const {
 }
 
 void Weapon::displayInfo() const {
+    cout << "Name: " << name << endl;
     cout << "Rarity: " << getRarityName() << endl;
     cout << "Material: " << material << endl;
     cout << "Damage: " << damage << endl;
     cout << "Durability: " << durability << endl;
     cout << "Speed: " << speed << endl;
+}
+
+string Weapon::getName() const {
+    cout << "Weapon Name: " << name << endl;
+    return name;
 }
 
 int Weapon::getDamage() const { 
@@ -58,6 +64,7 @@ void Weapon::buffSpeed() {
 
 Weapon& Weapon::operator=(const Weapon& other) {
     if (this != &other) {
+        name      = other.name;
         rarity     = other.rarity;
         material   = other.material;
         damage     = other.damage;
@@ -67,8 +74,13 @@ Weapon& Weapon::operator=(const Weapon& other) {
     return *this;
 }
 
+string Weapon::getMaterial() const {
+    return material;
+}
+
 Weapon::Weapon(const Weapon& other)
-    : rarity(other.rarity),
+    : name(other.name),
+      rarity(other.rarity),
       material(other.material),
       damage(other.damage),
       durability(other.durability),
@@ -79,16 +91,18 @@ bool Weapon::operator<(const Weapon& other) const {
 }
 
 Weapon::~Weapon() {
-    cout << "Weapon destroyed!" << endl;
+    //cout << "Weapon " << name << " destroyed!" << endl;
 }
 
 // Derived Class: Sword
 int Sword::swordCount = 0;
 
-Sword::Sword(Rarity rarity, const std::string& material, int damage, int durability, int speed,
+Sword::Sword(const std::string& name, Rarity rarity, const std::string& material, int damage, int durability, int speed,
              int bladeLength, int sharpness, int bleedChance)
-    : Weapon(rarity, material, damage, durability, speed),
+    : Weapon(name, rarity, material, damage, durability, speed),
       bladeLength(bladeLength), sharpness(sharpness), bleedChance(bleedChance) {
+
+    cout << "Sword " << name << " created!" << endl;
     swordCount++;
 }
 
@@ -99,7 +113,7 @@ Sword::Sword(const Sword& other)
       bleedChance(other.bleedChance) {
 
     swordCount++;
-    cout << "Sword copied!" << endl;
+    cout << "Sword " << name << " copied!" << endl;
 }
 
 int Sword::attack() const {
@@ -144,7 +158,7 @@ Sword& Sword::operator=(const Sword& other) {
 }
 
 bool Sword::operator<(const Sword& other) const {
-    return damage < other.damage;
+    return this->damage < other.damage;
 }
 
 int Sword::getSwordCount() {
@@ -171,17 +185,19 @@ int Sword::getSpeed() const {
 };
 
 Sword::~Sword() {
-    cout << "Sword destroyed!" << endl;
+    cout << "Sword " << name << " destroyed!" << endl;
     swordCount--;
 }
 
 // Derived Class: Axe
 int Axe::axeCount = 0;
 
-Axe::Axe(Rarity rarity, const std::string& material, int damage, int durability, int speed,
+Axe::Axe(const std::string& name, Rarity rarity, const std::string& material, int damage, int durability, int speed,
          int weight, int cleaveChance)
-    : Weapon(rarity, material, damage, durability, speed),
+    : Weapon(name, rarity, material, damage, durability, speed),
       weight(weight), cleaveChance(cleaveChance) {
+
+    cout << "Axe " << name << " created!" << endl;    
     axeCount++;
 }
 
@@ -236,19 +252,19 @@ int Axe::getAxeCount() {
 }
 
 Axe::~Axe() {
-    cout << "Axe destroyed!" << endl;
+    cout<< "Axe " << name << " destroyed!" << endl;
     axeCount--;
 }
 
 // Derived Class: SwordAxe. Combines Sword and Axe (Multiple Inheritance)
-SwordAxe::SwordAxe(Rarity rarity, const std::string& material, int damage, int durability, int speed,
+SwordAxe::SwordAxe(const std::string& name, Rarity rarity, const std::string& material, int damage, int durability, int speed,
                    int bladeLength, int sharpness, int bleedChance,
                    int weight, int cleaveChance)
-    : Weapon(rarity, material, damage, durability, speed), // initialize virtual base
-      Sword(rarity, material, damage, durability, speed, bladeLength, sharpness, bleedChance),
-      Axe(rarity, material, damage, durability, speed, weight, cleaveChance) 
+    : Weapon(name, rarity, material, damage, durability, speed), // initialize virtual base
+      Sword(name, rarity, material, damage, durability, speed, bladeLength, sharpness, bleedChance),
+      Axe(name, rarity, material, damage, durability, speed, weight, cleaveChance) 
 {
-    cout << "SwordAxe created!" << endl;
+    cout << "SwordAxe " << name << " created!" << endl;
 }
 
 // Override attack to combine Sword and Axe attacks
@@ -262,6 +278,7 @@ int SwordAxe::attack() const {
 
 // Override displayInfo to show info from both Sword and Axe
 void SwordAxe::displayInfo() const {
+    cout << name << " Info:" << endl;
     int swordDamage = Sword::attack(); // call Sword's attack
     int axeDamage   = Axe::attack();   // call Axe's attack
     int totalDamage = swordDamage + axeDamage;
@@ -270,6 +287,10 @@ void SwordAxe::displayInfo() const {
     cout << "Total Damage: " << totalDamage << endl; // combined damage
     cout << "Bleed Chance: " << Sword::bleedChance << "%" << endl;
     cout << "Cleave Chance: " << Axe::cleaveChance << "%" << endl;
+}
+
+SwordAxe::~SwordAxe() {
+    cout << "SwordAxe " << name << " destroyed!" << endl;
 }
 
 // Non-member Functions
