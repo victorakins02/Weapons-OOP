@@ -29,10 +29,10 @@ public:
     Weapon(const std::string& name, Rarity rarity, const std::string& material, int damage, int durability, int speed);
     Weapon(const Weapon& other);
 
-    // Virtual Destructor
+    // (4. Virtual Destructor)
     virtual ~Weapon();
 
-    // Abstract Method
+    // (3. Abstract Method)
     virtual int attack() const = 0;
 
     // Methods
@@ -54,12 +54,15 @@ public:
     // Operators
     virtual Weapon& operator=(const Weapon& other);
     virtual bool operator<(const Weapon& other) const;
+    bool operator==(const Weapon& other) const;
+    bool operator+(const Weapon& other) const;
 };
 
 // Derived Class: Sword (1. Inheritance, 2. Access Specifiers)
 class Sword : public virtual Weapon {
 private:
     int bladeLength;
+    friend void increaseLength(Sword* sword);
     static int swordCount; // Static member to count attack
 protected:
     int sharpness;
@@ -159,6 +162,6 @@ void displayRarity(const Weapon& weapon);
 void displayArsenal(Weapon* const arsenal[], int size);
 void useWeapon(void* obj);
 void destroyWeapon(Weapon* weapon);
-bool operator==(const Weapon& w1, const Weapon& w2);
+//bool operator==(const Weapon& w1, const Weapon& w2);
 void weaponBuffByValue(Sword weapon);
 void weaponBuffByReference(Sword& weapon);

@@ -61,13 +61,14 @@ int main() {
     // (11. Friend Functions)
     cout << "Question 11: Friend Functions" << endl;
     getDurability(&Bronze); // Access private member durability via friend function. Need to redo this on something private
+    increaseLength(Wood); // Increase blade length via friend function
     cout << endl;
 
     // (12. Virtual and Non-Virtual Methods)
     cout << "Question 12: Virtual vs Non-Virtual Methods" << endl;
     Weapon *Steel = new Sword("Steel", Rarity::Rare, "Steel", 70, 120, 38, 80, 15, 20);
     cout << Steel->getRarityName() << endl; // Virtual call -> Sword's getRarityName
-    Steel->getSpeed(); // Non-virtual call -> Weapon's getSpeed
+    Steel->getName(); // Non-virtual call -> Weapon's getName()
     cout << endl;
 
     // (13. Explicit Casts)
@@ -80,10 +81,18 @@ int main() {
     cout << "Question 14: Operator Overloading" << endl;
     Sword *toySword = new Sword("ToySword", Rarity::Uncommon, "Wood", 20, 50, 30, 10, 5, 5);
     if (*Copper < *toySword) {
-        cout << "Copper sword has less damage than Steel sword." << endl;
+        cout << "Copper sword has less damage than toySsword." << endl;
     } else {
-        cout << "Copper sword has more damage than Steel sword." << endl;
+        cout << "Copper sword has more damage than or equal damage to ToySword." << endl;
     }
+
+    if (*Copper == *Steel) {
+        cout << "Copper sword has equal damage to Steel." << endl;
+    } else {
+        cout << "Copper sword has different damage than Steel." << endl;
+    }
+
+    *Copper + *toySword;
     cout << endl;
 
     // (15. Assignment Operator Overloading)
@@ -100,6 +109,8 @@ int main() {
     cout << "Question 16: Copy Constructor" << endl;
     Sword copySword = *Diamond; // Calls copy constructor
     copySword.displayInfo();
+    copySword.getBladeLengthByValue(copySword); // PBV
+    copySword.getBladeLengthByReference(copySword); // PBR
     cout << endl;
 
     // (17. Static Members)
@@ -131,11 +142,6 @@ int main() {
         cout << "Item " << i.getMaterial() << ", Damage: " << i.getDamage() << endl;
     }
     cout << endl;
-/*
-    for (void* item : inventory) {
-        useWeapon(item); // Use each weapon in the inventory
-    }
-*/
     
 
     //(5. Dynamic Memory (delete))

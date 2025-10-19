@@ -87,8 +87,19 @@ Weapon::Weapon(const Weapon& other)
       speed(other.speed) {}
 
 bool Weapon::operator<(const Weapon& other) const {
-    return damage < other.damage;
+    return damage <= other.damage;
 }
+
+bool Weapon::operator==(const Weapon &other) const {
+    return this->getDamage() == other.getDamage();
+}
+
+bool Weapon::operator+(const Weapon& other) const {
+    cout << this->damage << " + " << other.damage << " = ";
+    cout << this->damage + other.damage << endl;
+    return true;
+}
+
 
 Weapon::~Weapon() {
     //cout << "Weapon " << name << " destroyed!" << endl;
@@ -294,9 +305,9 @@ SwordAxe::~SwordAxe() {
 }
 
 // Non-member Functions
-bool operator==(const Weapon& w1, const Weapon& w2) {
-    return w1.getDamage() == w2.getDamage();
-}
+//bool operator==(const Weapon& w1, const Weapon& w2) {
+//    return w1.getDamage() == w2.getDamage();
+//}
 
 void displayArsenal(Weapon* const arsenal[], int size) {
     for (int i = 0; i < size; ++i) {
@@ -311,6 +322,11 @@ void weaponBuffByValue(Sword weapon) {
 
 void displayRarity(const Weapon& weapon) {
     cout << "Weapon Rarity: " << weapon.getRarityName() << endl;
+}
+
+void increaseLength(Sword* sword) {
+    sword->bladeLength += 5;
+    cout << "Increased blade length to: " << sword->bladeLength << endl;
 }
 
 void weaponBuffByReference(Sword& weapon) {
